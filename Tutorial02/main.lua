@@ -1,51 +1,35 @@
--- PROJECT TEMPLATE --
+-- Crappy Bagel --
 -- MAIN SCRIPT --
 
 -- Love functions --
 function love.load()
-	lg = love.graphics
-	
-	Scene = require("Scenes/Start")
-	
-	if Scene.load~=nil then Scene:load() end
+	-- Load scene1
+	changeScene("scene1")
 end
 
 function love.update(dt)
-	if Scene.update~=nil then Scene:update(dt) end
+	-- Call the update function of the current scene
+	if Scene.update then Scene:update(dt) end
 end
 
 function love.draw()
-	if Scene.draw~=nil then Scene:draw() end
-end
---####--
-
--- Functions --
-function changeScene(nextScene)
-	Scene = require("Scenes/"..nextScene)
-	
-	if Scene.load~=nil then Scene:load() end
-end
---####--
-
--- Events --
-function love.touchpressed(id, x, y, dx, dy, p)
-	
-end
-
-function love.touchmoved(id, x, y, dx, dy, p)
-	
-end
-
-function love.touchreleased(id, x, y, dx, dy, p)
-	
+	-- Call the draw function of the current scene
+	if Scene.draw then Scene:draw() end
 end
 
 function love.keypressed(key, scancode, isrepeat)
-	if key == "escape" then
-		love.event.quit()
-	elseif key == "space" then
-		changeScene("Game")
-	end
-	
+	-- Call the keypressed function of the current scene
+	if Scene.keypressed then Scene:keypressed(key, scancode, isrepeat) end
 end
---####--
+
+function love.touchpressed(id, x, y, dx, dy, p)
+	-- Call the touchpressed function of the current scene
+	if Scene.touchpressed then Scene:touchpressed(id, x, y, dx, dy, p) end
+end
+
+function changeScene(nextScene)
+	-- Scene contains the table returned by the file passed in the return function
+	Scene = require("Scenes/"..nextScene)
+	-- Call the load function of the new scene
+	if Scene.load then Scene:load() end
+end
